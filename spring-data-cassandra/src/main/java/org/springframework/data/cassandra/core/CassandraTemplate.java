@@ -1055,13 +1055,15 @@ public class CassandraTemplate extends CqlTemplate implements CassandraOperation
 				try {
 					ResultSet rs = rsf.getUninterruptibly();
 					Iterator<Row> iterator = rs.iterator();
-					if (iterator.hasNext()) {
+					if (iterator.hasNext()) {h
 						Row row = iterator.next();
 						T result = new CassandraConverterRowCallback<T>(cassandraConverter, type).doWith(row);
 						if (iterator.hasNext()) {
 							throw new DuplicateKeyException("found two or more results in query " + query);
 						}
 						listener.onQueryComplete(result);
+					} else {
+						listener.onQueryComplete(null);
 					}
 				} catch (Exception e) {
 					listener.onException(translateExceptionIfPossible(e));
